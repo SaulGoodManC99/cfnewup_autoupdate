@@ -158,7 +158,15 @@ jobs:
             git push
             echo "已提交并推送更新"
           fi
-      
+
+      - name: 自动部署到 Cloudflare Workers
+        if: steps.check_version.outputs.need_update == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+
       - name: 输出摘要
         run: |
           echo "## 同步结果" >> $GITHUB_STEP_SUMMARY
@@ -166,9 +174,10 @@ jobs:
           echo "- 当前版本: ${{ steps.check_version.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ steps.check_version.outputs.need_update }}" = "true" ]; then
-            echo "- 状态: ✅ 已更新到新版本" >> $GITHUB_STEP_SUMMARY
+            echo "- 状态: ✅ 已更新到新版本并部署到 Cloudflare" >> $GITHUB_STEP_SUMMARY
             echo "- 下载文件: ${{ steps.get_latest.outputs.file_name }}" >> $GITHUB_STEP_SUMMARY
           else
             echo "- 状态: ⏭️ 版本相同，无需更新" >> $GITHUB_STEP_SUMMARY
           fi
+
 

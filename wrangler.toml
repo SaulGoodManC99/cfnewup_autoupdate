@@ -1,0 +1,8 @@
+name = "cfnew"
+main = "_worker.js"
+compatibility_date = "2026-01-20"
+
+# 绑定 KV 命名空间（变量名严格为大写 C，部署后可在 Cloudflare 控制台直接绑定，或在此处填入 id）
+# [[kv_namespaces]]
+# binding = "C"
+# id = "YOUR_KV_NAMESPACE_ID"
